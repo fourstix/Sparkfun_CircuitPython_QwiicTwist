@@ -56,7 +56,9 @@ from micropython import const
 from adafruit_bus_device.i2c_device import I2CDevice
 
 # public constants
-QWIIC_TWIST_ADDR = const(0x3F) #default I2C Address
+QWIIC_TWIST_ADDR = const(0x3F) # default I2C Address
+QWIIC_TWIST_ID = const(0x5c) # value returned by id register
+
 
 
 # private constants
@@ -67,9 +69,6 @@ _BUTTON_PRESSED_BIT = const(1)
 _ENCODER_MOVED_BIT = const(0)
 _BUTTON_INT_ENABLE = const(1)
 _ENCODER_INT_ENABLE = const(0)
-
-# value returned by id register
-_QWIIC_TWIST_ID = const(0x5c)
 
 # register constants
 _TWIST_ID = const(0x00)
@@ -105,7 +104,7 @@ class Sparkfun_QwiicTwist:
     @property
     def connected(self):
         """Check the id of Rotary Encoder.  Returns True if successful."""
-        if self._read_register8(_TWIST_ID) != _QWIIC_TWIST_ID:
+        if self._read_register8(_TWIST_ID) != QWIIC_TWIST_ID:
             return False
         return True
 
@@ -254,7 +253,7 @@ class Sparkfun_QwiicTwist:
 
     def time_since_last_movement(self, clear=True):
         """Return the number of milliseconds since the last encoder movement"""
-        elapsed_time = self_read_register16(_TWIST_LAST_ENCODER_EVENT)
+        elapsed_time = self._read_register16(_TWIST_LAST_ENCODER_EVENT)
 
         # Clear the current value if requested
         if clear:
@@ -263,7 +262,7 @@ class Sparkfun_QwiicTwist:
 
     def time_since_last_press(self, clear=True):
         """Return the number of milliseconds since the last button press and release"""
-        elapsed_time = self_read_register16(_TWIST_LAST_BUTTON_EVENT)
+        elapsed_time = self._read_register16(_TWIST_LAST_BUTTON_EVENT)
 
         # Clear the current value if requested
         if clear:
