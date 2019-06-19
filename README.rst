@@ -14,13 +14,13 @@ Introduction
     :alt: Build Status
 
 CircuitPython library for Sparkfun Qwiic Twist RGB Rotary Encoder.  This library is ported from
-`SparkFun Qwiic Twist Arduion Library <https://github.com/sparkfun/SparkFun_Qwiic_Twist_Arduino_Library>`_
+`SparkFun Qwiic Twist Arduino Library <https://github.com/sparkfun/SparkFun_Qwiic_Twist_Arduino_Library>`_
 
-.. image:: https://cdn.sparkfun.com//assets/parts/1/3/4/5/1/15093-SparkFun_Qwiic_Single_Twist-01.jpg
+.. image:: https://cdn.sparkfun.com//assets/parts/1/3/4/3/3/15083-SparkFun_Qwiic_Twist_-_RGB_Rotary_Encoder_Breakout-01.jpg
     :target: https://www.sparkfun.com/products/15083
-    :alt: SparkFun Qwiic Single Twist (DEV-15093)
+    :alt: SparkFun Qwiic Twist RGB Rotary Encorder (DEV-15083)
 
-`SparkFun Qwiic Twist RGB Rotary Encoder (DEV-15093) <https://www.sparkfun.com/products/15083>`_
+`SparkFun Qwiic Twist RGB Rotary Encoder (DEV-15083) <https://www.sparkfun.com/products/15083>`_
   
 
 
