@@ -160,7 +160,7 @@ class Sparkfun_QwiicTwist:
 # public properties (read-write)
 
     @property
-    def count(self): 
+    def count(self):
         """Returns the number of indents since the user turned the knob."""
         return self._read_register16(_TWIST_COUNT)
 
@@ -168,7 +168,7 @@ class Sparkfun_QwiicTwist:
     @count.setter
     def count(self, value):
         """Set the number of indents to a given amount."""
-        self._write_retister16(_TWIST_COUNT, value)
+        self._write_register16(_TWIST_COUNT, value)
 
     @property
     def red(self):
@@ -232,12 +232,14 @@ class Sparkfun_QwiicTwist:
 
     @property
     def int_timeout(self):
-        """Get number of milliseconds that elapse between end of knob turning and interrupt firing."""
+        """Get number of milliseconds that elapse between
+        the end of the knob turning and interrupt firing."""
         return self._read_register16(_TWIST_TURN_INT_TIMEOUT)
 
     @int_timeout.setter
     def int_timeout(self, value):
-        """Set the number of milliseconds that elapse between end of knob turning and interrupt firing."""
+        """Set the number of milliseconds that elapse between
+        the end of knob turning and interrupt firing."""
         self._write_register16(_TWIST_TURN_INT_TIMEOUT, value)
 
 # public functions
@@ -252,20 +254,20 @@ class Sparkfun_QwiicTwist:
 
     def time_since_last_movement(self, clear=True):
         """Return the number of milliseconds since the last encoder movement"""
-        elapsed_time = self_read_register16(_TWIST_LAST_ENCODER_EVENT);
+        elapsed_time = self_read_register16(_TWIST_LAST_ENCODER_EVENT)
 
         # Clear the current value if requested
         if clear:
-            self._write_register16(_TWIST_LAST_ENCODER_EVENT, 0);
+            self._write_register16(_TWIST_LAST_ENCODER_EVENT, 0)
         return elapsed_time
 
     def time_since_last_press(self, clear=True):
         """Return the number of milliseconds since the last button press and release"""
-        elapsed_time = self_read_register16(_TWIST_LAST_BUTTON_EVENT);
+        elapsed_time = self_read_register16(_TWIST_LAST_BUTTON_EVENT)
 
         # Clear the current value if requested
         if clear:
-            self._write_register16(_TWIST_LAST_BUTTON_EVENT, 0);
+            self._write_register16(_TWIST_LAST_BUTTON_EVENT, 0)
         return elapsed_time
 
     def clear_interrupts(self):
@@ -281,9 +283,9 @@ class Sparkfun_QwiicTwist:
 
     def connect_color(self, red_value, green_value, blue_value):
         """Connect all the rgb color for the encoder LEDs"""
-        self.red_connect = red_value
-        self.green_connect = green_value
-        self.blue_connect = blue_value
+        self._write_register16(_TWIST_CONNECT_RED, red_value)
+        self._write_register16(_TWIST_CONNECT_GREEN, green_value)
+        self._write_register16(_TWIST_CONNECT_BLUE, blue_value)
 
     def change_address(self, new_address):
         """Change the i2c address of Twist Rotary Encoder snd return True if successful."""
@@ -327,8 +329,8 @@ class Sparkfun_QwiicTwist:
         with self._device as device:
             device.write(bytes([addr & 0xFF, value & 0xFF]))
             if self._debug:
-                print("$%02X <= 0x%02X" % (addr, value)
-)
+                print("$%02X <= 0x%02X" % (addr, value))
+
     def _read_register16(self, addr):
         # Read and return a 16-bit value from the specified 8-bit register address.
         with self._device as device:
