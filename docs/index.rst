@@ -30,9 +30,6 @@ Table of Contents
 
     Sparkfun Qwiic Twist RGB Rotary Encoder <https://www.sparkfun.com/products/15083>
 
-.. todo:: Add any product links here. If there are none, then simply delete this todo and leave
-    the toctree above for use later.
-
 .. toctree::
     :caption: Other Links
 
