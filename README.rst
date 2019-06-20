@@ -120,10 +120,10 @@ Usage Example
      # Create bus object using the board's I2C port
      i2c = busio.I2C(board.SCL, board.SDA)
 
-     twist = QwiicTwist(i2c)  # default address is 0x20
+     twist = QwiicTwist(i2c)  # default address is 0x3F
 
      # For a different address use QwiicTwist(i2c, address)
-     # twist = QwiicTwist(i2c, 0x21)
+     # twist = QwiicTwist(i2c, 0x3E)
 
 
 Contributing

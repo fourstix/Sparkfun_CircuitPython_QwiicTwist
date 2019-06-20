@@ -112,8 +112,9 @@ class Sparkfun_QwiicTwist:
     def version(self):
         """Return the version string for the Twist firmware."""
         value = self._read_register16(_TWIST_VERSION)
-        minor = value & 0xFF
-        major = (value >> 8) & 0xFF
+        # LSB is Major and MSB is minor
+        major = value & 0xFF
+        minor = (value >> 8) & 0xFF
 
         return 'v' + str(major) + '.' + str(minor)
 
@@ -161,7 +162,8 @@ class Sparkfun_QwiicTwist:
     @property
     def count(self):
         """Returns the number of indents since the user turned the knob."""
-        return self._read_register16(_TWIST_COUNT)
+        value = self._read_register16(_TWIST_COUNT)
+        return self._signed_int16(value)
 
 
     @count.setter
@@ -202,7 +204,8 @@ class Sparkfun_QwiicTwist:
     @property
     def red_connection(self):
         """Get the value of the red LED connection"""
-        return self._read_register16(_TWIST_CONNECT_RED)
+        value = self._read_register16(_TWIST_CONNECT_RED)
+        return self._signed_int16(value)
 
     @red_connection.setter
     def red_connection(self, value):
@@ -217,12 +220,14 @@ class Sparkfun_QwiicTwist:
     @green_connection.setter
     def green_connection(self, value):
         """Set the value of the green LED connection"""
-        self._write_register16(_TWIST_CONNECT_GREEN, value)
+        value = self._write_register16(_TWIST_CONNECT_GREEN, value)
+        return self._signed_int16(value)
 
     @property
     def blue_connection(self):
         """Get the value of the blue LED connection."""
-        return self._read_register16(_TWIST_CONNECT_BLUE)
+        value = self._read_register16(_TWIST_CONNECT_BLUE)
+        return self._signed_int16(value)
 
     @blue_connection.setter
     def blue_connection(self, value):
@@ -243,9 +248,10 @@ class Sparkfun_QwiicTwist:
 
 # public functions
 
-    def difference(self, clear):
+    def difference(self, clear=True):
         """"Return the number of clicks since last check."""
-        diff = self._read_register16(_TWIST_DIFFERENCE)
+        value = self._read_register16(_TWIST_DIFFERENCE)
+        diff = self._signed_int16(value)
 
         if clear:
             self._write_register16(_TWIST_DIFFERENCE, 0)
@@ -253,6 +259,7 @@ class Sparkfun_QwiicTwist:
 
     def time_since_last_movement(self, clear=True):
         """Return the number of milliseconds since the last encoder movement"""
+        # unsigned 16-bit value
         elapsed_time = self._read_register16(_TWIST_LAST_ENCODER_EVENT)
 
         # Clear the current value if requested
@@ -262,6 +269,7 @@ class Sparkfun_QwiicTwist:
 
     def time_since_last_press(self, clear=True):
         """Return the number of milliseconds since the last button press and release"""
+        # unsigned 16-bit value
         elapsed_time = self._read_register16(_TWIST_LAST_BUTTON_EVENT)
 
         # Clear the current value if requested
@@ -273,7 +281,7 @@ class Sparkfun_QwiicTwist:
         """Clears the moved, clicked, and pressed bits"""
         self._write_register8(_TWIST_STATUS, 0)
 
-    def rgb_color(self, red_value, green_value, blue_value):
+    def set_color(self, red_value, green_value, blue_value):
         """Set the rgb color of the encoder LEDs"""
         self._write_register24(_TWIST_RED,
                                (red_value & 0xFF) << 16 |
@@ -313,6 +321,19 @@ class Sparkfun_QwiicTwist:
 
 # private functions
 
+    def _signed_int16(self, value):
+        # convert a 16-bit value into a signed integer
+        result = value
+        if self._debug:
+            print('Unsigned 16-bit value = ' + str(result))
+
+        if result & (1<<15):
+           result -= 1<<16
+
+        if self._debug:
+            print('Signed 16-bit value = ' + str(result))
+        return result
+ 
     def _read_register8(self, addr):
         # Read and return a byte from the specified 8-bit register address.
         with self._device as device:
@@ -338,27 +359,18 @@ class Sparkfun_QwiicTwist:
             device.readinto(result)
             if self._debug:
                 print("$%02X => %s" % (addr, [hex(i) for i in result]))
-            return (result[0] << 8) | result[1]
+            return (result[1] << 8) | result[0]
 
     def _write_register16(self, addr, value):
         # Write a 16-bit big endian value to the specified 8-bit register
         with self._device as device:
+            # write LSB then MSB
             device.write(bytes([addr & 0xFF,
-                                (value >> 8) & 0xFF,
-                                value & 0xFF]))
+                                value & 0xFF, 
+                                (value >> 8) & 0xFF]))
             if self._debug:
-                print("$%02X <= 0x%02X" % (addr, (value >> 8) &0xFF))
                 print("$%02X <= 0x%02X" % (addr, value & 0xFF))
-
-    def _read_register24(self, addr):
-        # Read and return 24-bit value from the specified 8-bit register address.
-        with self._device as device:
-            device.write(bytes([addr & 0xFF]), stop=False)
-            result = bytearray(3)
-            device.readinto(result)
-            if self._debug:
-                print("$%02X => %s" % (addr, [hex(i) for i in result]))
-            return (result[0] << 16) | (result[1] << 8) | result[2]
+                print("$%02X <= 0x%02X" % (addr, (value >> 8) &0xFF))
 
     def _write_register24(self, addr, value):
         # Write a byte to the specified 8-bit register address
