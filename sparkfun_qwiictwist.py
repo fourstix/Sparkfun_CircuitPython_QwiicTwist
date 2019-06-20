@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 #
-# Copyright (c) 2019 Gaston Williams for Sparkfun
+# Copyright (c) 2019 Gaston Williams
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -271,7 +271,6 @@ class Sparkfun_QwiicTwist:
         """Return the number of milliseconds since the last button press and release"""
         # unsigned 16-bit value
         elapsed_time = self._read_register16(_TWIST_LAST_BUTTON_EVENT)
-
         # Clear the current value if requested
         if clear:
             self._write_register16(_TWIST_LAST_BUTTON_EVENT, 0)
@@ -328,16 +327,16 @@ class Sparkfun_QwiicTwist:
             print('Unsigned 16-bit value = ' + str(result))
 
         if result & (1<<15):
-           result -= 1<<16
+            result -= 1<<16
 
         if self._debug:
             print('Signed 16-bit value = ' + str(result))
         return result
- 
+
     def _read_register8(self, addr):
         # Read and return a byte from the specified 8-bit register address.
         with self._device as device:
-            device.write(bytes([addr & 0xFF]), stop=False)
+            device.write(bytes([addr & 0xFF]))
             result = bytearray(1)
             device.readinto(result)
             if self._debug:
@@ -354,7 +353,7 @@ class Sparkfun_QwiicTwist:
     def _read_register16(self, addr):
         # Read and return a 16-bit value from the specified 8-bit register address.
         with self._device as device:
-            device.write(bytes([addr & 0xFF]), stop=False)
+            device.write(bytes([addr & 0xFF]))
             result = bytearray(2)
             device.readinto(result)
             if self._debug:
@@ -366,7 +365,7 @@ class Sparkfun_QwiicTwist:
         with self._device as device:
             # write LSB then MSB
             device.write(bytes([addr & 0xFF,
-                                value & 0xFF, 
+                                value & 0xFF,
                                 (value >> 8) & 0xFF]))
             if self._debug:
                 print("$%02X <= 0x%02X" % (addr, value & 0xFF))
