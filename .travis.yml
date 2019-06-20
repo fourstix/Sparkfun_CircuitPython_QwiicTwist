@@ -29,7 +29,7 @@ deploy:
   # TODO: Use 'travis encrypt --com -r adafruit/<repo slug>' to generate
   #       the encrypted password for adafruit-travis. Paste result below.
   - provider: pypi
-    user: adafruit-travis
+    user: fourstix
     password:
       secure: mv/v3NO2zTNNMkp0TmWzL599MHOq4AcOmAALpVSRaOjvAE3vDFVopI+p8GFj80+UaIG49Jl2TE9k+zB/4RO+q/DSnVGeDAe619ViAaPeSl71nd98IYOOUa77HLZioc8PwbW8y+8PEd0MgW6nNhjSh0IHjqC/t/iWYbNV8b/m5sfRRGYXFypuRo/BxX9os03XFg+mhJsYORX+ipXqJoQdSoUyOXcvcOBzzyLoVuX8YYVowE4muUSKnBV4PiZLK5IGacecRtG1yxXR1mpLW4pe2oyRsKdgcTit1BswInYyufu5O5qC6OZRuQMLD6T2NQdq85mpmESoLA1KlPxCQ3jvRxOdCE1GC4KnFM4oHINFR4/V0DkLjivmqrRBw0Qv2+kQkru697wloiDFsuEZvgpihD/XQjhJgV/JhdyjFAm0dFwsc80UNcRNNi7FdL4C531eqAkfBJy9HUSLMFJSPWOshLOBiib8SI0AY7x/OBx+8cYNHDI5T3ROKHKiv9wt7CXryAOwxEP2h1TEPGMIBVgScDl14otTmoIvYUEiTXZtZ8XMEgX4g+xDObg/xBWDRsfBytVqwsHwK9Rf9WKwqriLYaYCpQ+e182an2mraIZ3ARZ58yAJjWW4DJFGgD//SODWnCcPnMNKANgvD9a5+Vbf8UZgBKFmDXPxvf7rnrCvzqc=
     on:
