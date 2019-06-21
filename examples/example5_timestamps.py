@@ -4,7 +4,7 @@
 #  https://www.sparkfun.com/products/15083
 
 """
- Qwiic Twist Example 5 - example1_timestampss.py
+ Qwiic Twist Example 5 - example5_timestamps.py
  Written by Gaston Williams, June 21st, 2019
  Based on Arduino code written by
  Nathan Seidle @ Sparkfun, December 3rd, 2018
