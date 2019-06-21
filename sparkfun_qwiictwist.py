@@ -248,7 +248,7 @@ class Sparkfun_QwiicTwist:
 
 # public functions
 
-    def difference(self, clear=True):
+    def get_difference(self, clear=True):
         """"Return the number of clicks since last check."""
         value = self._read_register16(_TWIST_DIFFERENCE)
         diff = self._signed_int16(value)

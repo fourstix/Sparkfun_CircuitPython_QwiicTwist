@@ -29,7 +29,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 # Create twist object
 twist = sparkfun_qwiictwist.Sparkfun_QwiicTwist(i2c)
 
-print('Qwicc Twist Example 1 Basic Readings')
+print('Qwicc Twist Example 7 Set Count')
 
 # Check if connected
 if twist.connected:
@@ -46,7 +46,7 @@ print('Type Ctrl-C to exit program.')
 try:
     while True:
         print('Count: ' + str(twist.count))
-        print('Difference: ' + str(twist.difference()))
+        print('Difference: ' + str(twist.get_difference()))
         sleep(0.250)
 
 except KeyboardInterrupt:
