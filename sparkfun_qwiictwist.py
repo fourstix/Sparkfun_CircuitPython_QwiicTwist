@@ -299,11 +299,7 @@ class Sparkfun_QwiicTwist:
         If True, clear the diffrence value after it is read.
         The defalt value is True.
         """
-        # coerce into boolean (maybe not necessary in python)
-        if value:
-           self._clear_difference_after_read = True
-        else:
-           self._clear_difference_after_read = False
+        self._clear_difference_after_read = bool(value)
 
 # public functions
 
