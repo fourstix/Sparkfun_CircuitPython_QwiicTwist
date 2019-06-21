@@ -43,9 +43,6 @@ else:
 
 print('Type Ctrl-C to exit program.')
 
-# Uncomment line below to *not* clear difference value after reading
-# twist.clear_difference_after_read = False
-
 try:
     while True:
         print('Count: ' + str(twist.count))

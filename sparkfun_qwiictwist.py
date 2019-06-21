@@ -59,8 +59,6 @@ from adafruit_bus_device.i2c_device import I2CDevice
 QWIIC_TWIST_ADDR = const(0x3F) # default I2C Address
 QWIIC_TWIST_ID = const(0x5c) # value returned by id register
 
-
-
 # private constants
 
 # bit constants
@@ -108,8 +106,6 @@ class Sparkfun_QwiicTwist:
         #save handle to i2c bus in case address is changed
         self._i2c = i2c
         self._debug = debug
-        # set up clear property after read defaults
-        self._clear_difference_after_read = True
 
 # public properites (read-only)
 
@@ -171,12 +167,14 @@ class Sparkfun_QwiicTwist:
 
     @property
     def difference(self):
-        """"Return the difference in number of clicks since previous check."""
+        """
+        Return the difference in number of clicks since previous check.
+        The value is cleared after it is read.
+        """
         value = self._read_register16(_TWIST_DIFFERENCE)
         diff = _signed_int16(value)
 
-        if self._clear_difference_after_read:
-            self._write_register16(_TWIST_DIFFERENCE, 0)
+        self._write_register16(_TWIST_DIFFERENCE, 0)
 
         return diff
 
@@ -295,21 +293,6 @@ class Sparkfun_QwiicTwist:
         """Set the number of milliseconds that elapse between
         the end of knob turning and interrupt firing."""
         self._write_register16(_TWIST_TURN_INT_TIMEOUT, value)
-
-    # clear proporties
-
-    @property
-    def clear_difference_after_read(self):
-        """Return True if the difference value is cleared after read."""
-        return self._clear_difference_after_read
-
-    @clear_difference_after_read.setter
-    def clear_difference_after_read(self, value):
-        """"
-        If True, clear the diffrence value after it is read.
-        The defalt value is True.
-        """
-        self._clear_difference_after_read = bool(value)
 
 # public methods
 
