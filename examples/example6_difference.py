@@ -46,7 +46,7 @@ print('Type Ctrl-C to exit program.')
 try:
     while True:
         print('Count: ' + str(twist.count))
-        print('Difference: ' + str(twist.get_difference()))
+        print('Difference: ' + str(twist.difference))
         sleep(0.250)
 
 except KeyboardInterrupt:
