@@ -301,7 +301,7 @@ class Sparkfun_QwiicTwist:
         """
         self._clear_difference_after_read = bool(value)
 
-# public functions
+# public methods
 
     def clear_interrupts(self):
         """Clears the moved, clicked, and pressed bits"""
@@ -346,8 +346,7 @@ class Sparkfun_QwiicTwist:
 # No i2c begin function is needed since I2Cdevice class takes care of that
 
 # private functions
-
-    def _signed_int16(self, value):
+    def _signed_int16(value):
         # convert a 16-bit value into a signed integer
         result = value
 
@@ -355,6 +354,8 @@ class Sparkfun_QwiicTwist:
             result -= 1<<16
 
         return result
+
+# private methods
 
     def _read_register8(self, addr):
         # Read and return a byte from the specified 8-bit register address.
