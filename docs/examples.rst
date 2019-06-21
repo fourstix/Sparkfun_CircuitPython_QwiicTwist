@@ -31,7 +31,7 @@ Examples
 4. Connect Color - Change the knob color as it is twisted.
 
 .. literalinclude:: ../examples/example4_connect_colors.py
-    :caption: examples/example3_connect_colors.py
+    :caption: examples/example4_connect_colors.py
     :linenos:
 
 5. Timestamps - Show timestamps for when knob is twisted or pressed.
