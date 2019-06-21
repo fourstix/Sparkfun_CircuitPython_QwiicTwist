@@ -89,14 +89,14 @@ _TWIST_TURN_INT_TIMEOUT = const(0x16)
 _TWIST_CHANGE_ADDRESS = const(0x18)
 
 # private functions
-    def _signed_int16(value):
-        # convert a 16-bit value into a signed integer
-        result = value
+def _signed_int16(value):
+    # convert a 16-bit value into a signed integer
+    result = value
 
-        if result & (1<<15):
-            result -= 1<<16
+    if result & (1<<15):
+        result -= 1<<16
 
-        return result
+    return result
 
 # class
 class Sparkfun_QwiicTwist:
