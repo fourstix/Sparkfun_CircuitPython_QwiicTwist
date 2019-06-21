@@ -5,7 +5,7 @@
 
 """
  Qwiic Twist Example 7 - example7_set_count.py
- Written by Gaston Williams, June 19th, 2019
+ Written by Gaston Williams, June 21st, 2019
  Based on Arduino code written by
  Nathan Seidle @ Sparkfun, December 3rd, 2018
  The Qwiic Twist is an I2C controlled RGB Rotary Encoder produced by sparkfun
@@ -46,7 +46,7 @@ print('Type Ctrl-C to exit program.')
 try:
     while True:
         print('Count: ' + str(twist.count))
-        print('Difference: ' + str(twist.get_difference()))
+        print('Difference: ' + str(twist.difference))
         sleep(0.250)
 
 except KeyboardInterrupt:

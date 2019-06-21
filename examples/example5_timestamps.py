@@ -1,4 +1,3 @@
-
 #  This is example is for the SparkFun Qwiic Single Twist.
 #  SparkFun sells these at its website: www.sparkfun.com
 #  Do you like this library? Help support SparkFun. Buy a board!
@@ -6,7 +5,7 @@
 
 """
  Qwiic Twist Example 5 - example1_timestampss.py
- Written by Gaston Williams, June 19th, 2019
+ Written by Gaston Williams, June 21st, 2019
  Based on Arduino code written by
  Nathan Seidle @ Sparkfun, December 3rd, 2018
  The Qwiic Twist is an I2C controlled RGB Rotary Encoder produced by sparkfun
@@ -48,9 +47,9 @@ try:
     while True:
         print('Count: ' + str(twist.count))
         if twist.moved:
-            print('Last Twist time: ' + str(twist.time_since_last_movement(False)))
+            print('Last Twist time: ' + str(twist.time_since_last_movement))
         if twist.clicked:
-            print('Last Button time: ' + str(twist.time_since_last_press(False)))
+            print('Last Button time: ' + str(twist.time_since_last_press))
         if twist.pressed:
             print('Pressed!')
         sleep(1)

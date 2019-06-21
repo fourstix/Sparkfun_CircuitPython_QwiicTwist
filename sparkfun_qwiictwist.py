@@ -98,6 +98,8 @@ class Sparkfun_QwiicTwist:
         #save handle to i2c bus in case address is changed
         self._i2c = i2c
         self._debug = debug
+        # set up clear property after read defaults
+        self._clear_difference_after_read = True
 
 # public properites (read-only)
 
@@ -156,6 +158,44 @@ class Sparkfun_QwiicTwist:
                               status & ~(1<<_BUTTON_CLICKED_BIT))
 
         return clicked
+
+    @property
+    def difference(self):
+        """"Return the difference in number of clicks since previous check."""
+        value = self._read_register16(_TWIST_DIFFERENCE)
+        diff = self._signed_int16(value)
+
+        if self._clear_difference_after_read:
+            self._write_register16(_TWIST_DIFFERENCE, 0)
+
+        return diff
+
+    @property
+    def time_since_last_movement(self):
+        """Return the number of milliseconds since the last encoder movement"""
+        # unsigned 16-bit value
+        elapsed_time = self._read_register16(_TWIST_LAST_ENCODER_EVENT)
+
+        # This value seems to be cleared regardless
+        # Clearing it sometimes returns 0 after write, so commenting out
+        # Clear the current value
+        # self._write_register16(_TWIST_LAST_ENCODER_EVENT, 0)
+
+        return elapsed_time
+
+    @property
+    def time_since_last_press(self):
+        """Return the number of milliseconds since the last button press and release"""
+        # unsigned 16-bit value
+        elapsed_time = self._read_register16(_TWIST_LAST_BUTTON_EVENT)
+
+        # This value seems to be cleared regardless
+        # Clearing it sometimes returns 0 after write, so commenting out
+        # Clear the current value if requested
+        # self._write_register16(_TWIST_LAST_BUTTON_EVENT, 0)
+
+        return elapsed_time
+
 
 # public properties (read-write)
 
@@ -246,35 +286,26 @@ class Sparkfun_QwiicTwist:
         the end of knob turning and interrupt firing."""
         self._write_register16(_TWIST_TURN_INT_TIMEOUT, value)
 
+    # clear proporties
+
+    @property
+    def clear_difference_after_read(self):
+        """Return True if the difference value is cleared after read."""
+        return self._clear_difference_after_read
+
+    @clear_difference_after_read.setter
+    def clear_difference_after_read(self, value):
+        """"
+        If True, clear the diffrence value after it is read.
+        The defalt value is True.
+        """
+        # coerce into boolean (maybe not necessary in python)
+        if value:
+           self._clear_difference_after_read = True
+        else:
+           self._clear_difference_after_read = False
+
 # public functions
-
-    def get_difference(self, clear=True):
-        """"Return the number of clicks since last check."""
-        value = self._read_register16(_TWIST_DIFFERENCE)
-        diff = self._signed_int16(value)
-
-        if clear:
-            self._write_register16(_TWIST_DIFFERENCE, 0)
-        return diff
-
-    def time_since_last_movement(self, clear=True):
-        """Return the number of milliseconds since the last encoder movement"""
-        # unsigned 16-bit value
-        elapsed_time = self._read_register16(_TWIST_LAST_ENCODER_EVENT)
-
-        # Clear the current value if requested
-        if clear:
-            self._write_register16(_TWIST_LAST_ENCODER_EVENT, 0)
-        return elapsed_time
-
-    def time_since_last_press(self, clear=True):
-        """Return the number of milliseconds since the last button press and release"""
-        # unsigned 16-bit value
-        elapsed_time = self._read_register16(_TWIST_LAST_BUTTON_EVENT)
-        # Clear the current value if requested
-        if clear:
-            self._write_register16(_TWIST_LAST_BUTTON_EVENT, 0)
-        return elapsed_time
 
     def clear_interrupts(self):
         """Clears the moved, clicked, and pressed bits"""
@@ -323,20 +354,16 @@ class Sparkfun_QwiicTwist:
     def _signed_int16(self, value):
         # convert a 16-bit value into a signed integer
         result = value
-        if self._debug:
-            print('Unsigned 16-bit value = ' + str(result))
 
         if result & (1<<15):
             result -= 1<<16
 
-        if self._debug:
-            print('Signed 16-bit value = ' + str(result))
         return result
 
     def _read_register8(self, addr):
         # Read and return a byte from the specified 8-bit register address.
         with self._device as device:
-            device.write(bytes([addr & 0xFF]))
+            device.write(bytes([addr & 0xFF]), stop=False)
             result = bytearray(1)
             device.readinto(result)
             if self._debug:
@@ -353,7 +380,7 @@ class Sparkfun_QwiicTwist:
     def _read_register16(self, addr):
         # Read and return a 16-bit value from the specified 8-bit register address.
         with self._device as device:
-            device.write(bytes([addr & 0xFF]))
+            device.write(bytes([addr & 0xFF]), stop=False)
             result = bytearray(2)
             device.readinto(result)
             if self._debug:
