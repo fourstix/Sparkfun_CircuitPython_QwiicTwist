@@ -88,6 +88,16 @@ _TWIST_CONNECT_BLUE = const(0x14)
 _TWIST_TURN_INT_TIMEOUT = const(0x16)
 _TWIST_CHANGE_ADDRESS = const(0x18)
 
+# private functions
+    def _signed_int16(value):
+        # convert a 16-bit value into a signed integer
+        result = value
+
+        if result & (1<<15):
+            result -= 1<<16
+
+        return result
+
 # class
 class Sparkfun_QwiicTwist:
     """CircuitPython class for the Sparkfun QwiicTwist RGB Rotary Encoder"""
@@ -163,7 +173,7 @@ class Sparkfun_QwiicTwist:
     def difference(self):
         """"Return the difference in number of clicks since previous check."""
         value = self._read_register16(_TWIST_DIFFERENCE)
-        diff = self._signed_int16(value)
+        diff = _signed_int16(value)
 
         if self._clear_difference_after_read:
             self._write_register16(_TWIST_DIFFERENCE, 0)
@@ -203,7 +213,7 @@ class Sparkfun_QwiicTwist:
     def count(self):
         """Returns the number of indents since the user turned the knob."""
         value = self._read_register16(_TWIST_COUNT)
-        return self._signed_int16(value)
+        return _signed_int16(value)
 
 
     @count.setter
@@ -245,7 +255,7 @@ class Sparkfun_QwiicTwist:
     def red_connection(self):
         """Get the value of the red LED connection"""
         value = self._read_register16(_TWIST_CONNECT_RED)
-        return self._signed_int16(value)
+        return _signed_int16(value)
 
     @red_connection.setter
     def red_connection(self, value):
@@ -261,13 +271,13 @@ class Sparkfun_QwiicTwist:
     def green_connection(self, value):
         """Set the value of the green LED connection"""
         value = self._write_register16(_TWIST_CONNECT_GREEN, value)
-        return self._signed_int16(value)
+        return _signed_int16(value)
 
     @property
     def blue_connection(self):
         """Get the value of the blue LED connection."""
         value = self._read_register16(_TWIST_CONNECT_BLUE)
-        return self._signed_int16(value)
+        return _signed_int16(value)
 
     @blue_connection.setter
     def blue_connection(self, value):
@@ -344,16 +354,6 @@ class Sparkfun_QwiicTwist:
         return True
 
 # No i2c begin function is needed since I2Cdevice class takes care of that
-
-# private functions
-    def _signed_int16(value):
-        # convert a 16-bit value into a signed integer
-        result = value
-
-        if result & (1<<15):
-            result -= 1<<16
-
-        return result
 
 # private methods
 
