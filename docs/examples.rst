@@ -58,7 +58,7 @@ Examples
     :caption: examples/example8_interruptst.py
     :linenos:
 
-9. Change I2C Addres - Change the device I2C address.
+9. Change I2C Address - Change the device I2C address.
 
 .. literalinclude:: ../examples/example9_change_i2c_address.py
     :caption: examples/example9_change_i2c_address.py
