@@ -88,7 +88,7 @@ Installing from PyPI
 
 .. code-block:: shell
 
-    pip3 install sparkfun-circuitpython-qwiictwist
+    pip install git+https://github.com/FAR-Lab/Sparkfun_CircuitPython_QwiicTwist.git
 
 To install system-wide (this may be required in some cases):
 
