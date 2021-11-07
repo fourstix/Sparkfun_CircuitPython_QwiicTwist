@@ -343,9 +343,8 @@ class Sparkfun_QwiicTwist:
     def _read_register8(self, addr):
         # Read and return a byte from the specified 8-bit register address.
         with self._device as device:
-            device.write(bytes([addr & 0xFF]), stop=False)
             result = bytearray(1)
-            device.readinto(result)
+            device.write_then_readinto(bytes([addr & 0xFF]), result)
             if self._debug:
                 print("$%02X => %s" % (addr, [hex(i) for i in result]))
             return result[0]
@@ -360,9 +359,8 @@ class Sparkfun_QwiicTwist:
     def _read_register16(self, addr):
         # Read and return a 16-bit value from the specified 8-bit register address.
         with self._device as device:
-            device.write(bytes([addr & 0xFF]), stop=False)
             result = bytearray(2)
-            device.readinto(result)
+            device.write_then_readinto(bytes([addr & 0xFF]), result)
             if self._debug:
                 print("$%02X => %s" % (addr, [hex(i) for i in result]))
             return (result[1] << 8) | result[0]
