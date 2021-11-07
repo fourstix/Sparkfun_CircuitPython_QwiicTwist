@@ -63,6 +63,7 @@ except ImportError:
 
 # public constants
 QWIIC_TWIST_ADDR = const(0x3F) # default I2C Address
+QWIIC_TWIST_ADDR_ALT = const(0x3E) # secondary I2C Address
 QWIIC_TWIST_ID = const(0x5c) # value returned by id register
 
 # private constants
@@ -148,7 +149,7 @@ class Sparkfun_QwiicTwist:
         self._write_register8(_TWIST_STATUS,
                               status & ~(1<<_ENCODER_MOVED_BIT))
 
-        return moved
+        return bool(moved)
 
     @property
     def pressed(self) -> bool:
@@ -161,7 +162,7 @@ class Sparkfun_QwiicTwist:
         self._write_register8(_TWIST_STATUS,
                               status & ~(1<<_BUTTON_PRESSED_BIT))
 
-        return pressed
+        return bool(pressed)
 
     @property
     def clicked(self) -> bool:
@@ -174,7 +175,7 @@ class Sparkfun_QwiicTwist:
         self._write_register8(_TWIST_STATUS,
                               status & ~(1<<_BUTTON_CLICKED_BIT))
 
-        return clicked
+        return bool(clicked)
 
     @property
     def difference(self) -> int:
