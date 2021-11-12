@@ -33,7 +33,7 @@ Implementation Notes
 
 **Hardware:**
 
-*  This is library is for the SparkFun Qwiic Joystick.
+*  This is library is for the SparkFun Qwiic Twist Rotary Encoder.
 *  SparkFun sells these at its website: www.sparkfun.com
 *  Do you like this library? Help support SparkFun. Buy a board!
    https://www.sparkfun.com/products/15083
@@ -55,8 +55,15 @@ from time import sleep
 from micropython import const
 from adafruit_bus_device.i2c_device import I2CDevice
 
+try:
+    # Only used for typing
+    from busio import I2C
+except ImportError:
+    pass
+
 # public constants
 QWIIC_TWIST_ADDR = const(0x3F) # default I2C Address
+QWIIC_TWIST_ADDR_ALT = const(0x3E) # secondary I2C Address
 QWIIC_TWIST_ID = const(0x5c) # value returned by id register
 
 # private constants
@@ -87,7 +94,7 @@ _TWIST_TURN_INT_TIMEOUT = const(0x16)
 _TWIST_CHANGE_ADDRESS = const(0x18)
 
 # private functions
-def _signed_int16(value):
+def _signed_int16(value: int) -> int:
     # convert a 16-bit value into a signed integer
     result = value
 
@@ -100,7 +107,12 @@ def _signed_int16(value):
 class Sparkfun_QwiicTwist:
     """CircuitPython class for the Sparkfun QwiicTwist RGB Rotary Encoder"""
 
-    def __init__(self, i2c, address=QWIIC_TWIST_ADDR, debug=False):
+    def __init__(
+        self,
+        i2c: I2C,
+        address: int = QWIIC_TWIST_ADDR,
+        debug: bool = False
+    ):
         """Initialize Qwiic Twist for i2c communication."""
         self._device = I2CDevice(i2c, address)
         #save handle to i2c bus in case address is changed
@@ -110,14 +122,14 @@ class Sparkfun_QwiicTwist:
 # public properites (read-only)
 
     @property
-    def connected(self):
+    def connected(self) -> bool:
         """Check the id of Rotary Encoder.  Returns True if successful."""
         if self._read_register8(_TWIST_ID) != QWIIC_TWIST_ID:
             return False
         return True
 
     @property
-    def version(self):
+    def version(self) -> str:
         """Return the version string for the Twist firmware."""
         value = self._read_register16(_TWIST_VERSION)
         # LSB is Major and MSB is minor
@@ -127,7 +139,7 @@ class Sparkfun_QwiicTwist:
         return 'v' + str(major) + '.' + str(minor)
 
     @property
-    def moved(self):
+    def moved(self) -> bool:
         """Return true if the knob has been twisted."""
         status = self._read_register8(_TWIST_STATUS)
 
@@ -137,10 +149,10 @@ class Sparkfun_QwiicTwist:
         self._write_register8(_TWIST_STATUS,
                               status & ~(1<<_ENCODER_MOVED_BIT))
 
-        return moved
+        return bool(moved)
 
     @property
-    def pressed(self):
+    def pressed(self) -> bool:
         """"Return true if button is currently pressed."""
         status = self._read_register8(_TWIST_STATUS)
 
@@ -150,10 +162,10 @@ class Sparkfun_QwiicTwist:
         self._write_register8(_TWIST_STATUS,
                               status & ~(1<<_BUTTON_PRESSED_BIT))
 
-        return pressed
+        return bool(pressed)
 
     @property
-    def clicked(self):
+    def clicked(self) -> bool:
         """Return true if a click event has occurred. Event flag is then reset."""
         status = self._read_register8(_TWIST_STATUS)
 
@@ -163,10 +175,10 @@ class Sparkfun_QwiicTwist:
         self._write_register8(_TWIST_STATUS,
                               status & ~(1<<_BUTTON_CLICKED_BIT))
 
-        return clicked
+        return bool(clicked)
 
     @property
-    def difference(self):
+    def difference(self) -> int:
         """
         Return the difference in number of clicks since previous check.
         The value is cleared after it is read.
@@ -179,7 +191,7 @@ class Sparkfun_QwiicTwist:
         return diff
 
     @property
-    def time_since_last_movement(self):
+    def time_since_last_movement(self) -> int:
         """Return the number of milliseconds since the last encoder movement"""
         # unsigned 16-bit value
         elapsed_time = self._read_register16(_TWIST_LAST_ENCODER_EVENT)
@@ -192,7 +204,7 @@ class Sparkfun_QwiicTwist:
         return elapsed_time
 
     @property
-    def time_since_last_press(self):
+    def time_since_last_press(self) -> int:
         """Return the number of milliseconds since the last button press and release"""
         # unsigned 16-bit value
         elapsed_time = self._read_register16(_TWIST_LAST_BUTTON_EVENT)
@@ -208,112 +220,112 @@ class Sparkfun_QwiicTwist:
 # public properties (read-write)
 
     @property
-    def count(self):
+    def count(self) -> int:
         """Returns the number of indents since the user turned the knob."""
         value = self._read_register16(_TWIST_COUNT)
         return _signed_int16(value)
 
 
     @count.setter
-    def count(self, value):
+    def count(self, value: int):
         """Set the number of indents to a given amount."""
         self._write_register16(_TWIST_COUNT, value)
 
     @property
-    def red(self):
+    def red(self) -> int:
         """Get the value of the red LED."""
         return self._read_register8(_TWIST_RED)
 
     @red.setter
-    def red(self, value):
+    def red(self, value: int):
         """Set the value of the red LED 0-255."""
         self._write_register8(_TWIST_RED, value)
 
     @property
-    def green(self):
+    def green(self) -> int:
         """Get the value of the green LED."""
         return self._read_register8(_TWIST_GREEN)
 
     @green.setter
-    def green(self, value):
+    def green(self, value: int):
         """Set the value of the green LED 0-255."""
         self._write_register8(_TWIST_GREEN, value)
 
     @property
-    def blue(self):
+    def blue(self) -> int:
         """Get the value of the blue LED"""
         return self._read_register8(_TWIST_BLUE)
 
     @blue.setter
-    def blue(self, value):
+    def blue(self, value: int):
         """Set the value of the blue LED 0-255."""
         self._write_register8(_TWIST_BLUE, value)
 
     @property
-    def red_connection(self):
+    def red_connection(self) -> int:
         """Get the value of the red LED connection"""
         value = self._read_register16(_TWIST_CONNECT_RED)
         return _signed_int16(value)
 
     @red_connection.setter
-    def red_connection(self, value):
+    def red_connection(self, value: int):
         """Set the value of the red LED connection."""
         self._write_register16(_TWIST_CONNECT_RED, value)
 
     @property
-    def green_connection(self):
+    def green_connection(self) -> int:
         """Get the value of the green LED connection."""
         return self._read_register16(_TWIST_CONNECT_GREEN)
 
     @green_connection.setter
-    def green_connection(self, value):
+    def green_connection(self, value: int):
         """Set the value of the green LED connection"""
         value = self._write_register16(_TWIST_CONNECT_GREEN, value)
         return _signed_int16(value)
 
     @property
-    def blue_connection(self):
+    def blue_connection(self) -> int:
         """Get the value of the blue LED connection."""
         value = self._read_register16(_TWIST_CONNECT_BLUE)
         return _signed_int16(value)
 
     @blue_connection.setter
-    def blue_connection(self, value):
+    def blue_connection(self, value: int):
         """Set the value of the blue LED connection."""
         self._write_register16(_TWIST_CONNECT_BLUE, value)
 
     @property
-    def int_timeout(self):
+    def int_timeout(self) -> int:
         """Get number of milliseconds that elapse between
         the end of the knob turning and interrupt firing."""
         return self._read_register16(_TWIST_TURN_INT_TIMEOUT)
 
     @int_timeout.setter
-    def int_timeout(self, value):
+    def int_timeout(self, value: int):
         """Set the number of milliseconds that elapse between
         the end of knob turning and interrupt firing."""
         self._write_register16(_TWIST_TURN_INT_TIMEOUT, value)
 
 # public methods
 
-    def clear_interrupts(self):
+    def clear_interrupts(self) -> None:
         """Clears the moved, clicked, and pressed bits"""
         self._write_register8(_TWIST_STATUS, 0)
 
-    def set_color(self, red_value, green_value, blue_value):
+    def set_color(self, red_value: int, green_value: int, blue_value: int) -> None:
         """Set the rgb color of the encoder LEDs"""
         self._write_register24(_TWIST_RED,
                                (red_value & 0xFF) << 16 |
                                (green_value & 0xFF) << 8 |
                                blue_value & 0xFF)
 
-    def connect_color(self, red_value, green_value, blue_value):
+    def connect_color(self, red_value: int, green_value: int, blue_value: int) -> None:
         """Connect all the rgb color for the encoder LEDs"""
         self._write_register16(_TWIST_CONNECT_RED, red_value)
         self._write_register16(_TWIST_CONNECT_GREEN, green_value)
         self._write_register16(_TWIST_CONNECT_BLUE, blue_value)
 
-    def change_address(self, new_address):
+    def change_address(self, new_address: int) -> bool:
         """Change the i2c address of Twist Rotary Encoder snd return True if successful."""
         # check range of new address
         if (new_address < 8 or new_address > 119):
@@ -322,7 +334,7 @@ class Sparkfun_QwiicTwist:
         # write new address
         self._write_register8(_TWIST_CHANGE_ADDRESS, new_address)
 
-	# wait a second for joystick to settle after change
+	    # wait a second for qwiic twist to settle after change
         sleep(1)
 
         # try to re-create new i2c device at new address
@@ -340,34 +352,32 @@ class Sparkfun_QwiicTwist:
 
 # private methods
 
-    def _read_register8(self, addr):
+    def _read_register8(self, addr: int) -> int:
         # Read and return a byte from the specified 8-bit register address.
         with self._device as device:
-            device.write(bytes([addr & 0xFF]))
             result = bytearray(1)
-            device.readinto(result)
+            device.write_then_readinto(bytes([addr & 0xFF]), result)
             if self._debug:
                 print("$%02X => %s" % (addr, [hex(i) for i in result]))
             return result[0]
 
-    def _write_register8(self, addr, value):
+    def _write_register8(self, addr: int, value: int) -> None:
         # Write a byte to the specified 8-bit register address
         with self._device as device:
             device.write(bytes([addr & 0xFF, value & 0xFF]))
             if self._debug:
                 print("$%02X <= 0x%02X" % (addr, value))
 
-    def _read_register16(self, addr):
+    def _read_register16(self, addr: int) -> int:
         # Read and return a 16-bit value from the specified 8-bit register address.
         with self._device as device:
-            device.write(bytes([addr & 0xFF]))
             result = bytearray(2)
-            device.readinto(result)
+            device.write_then_readinto(bytes([addr & 0xFF]), result)
             if self._debug:
                 print("$%02X => %s" % (addr, [hex(i) for i in result]))
             return (result[1] << 8) | result[0]
 
-    def _write_register16(self, addr, value):
+    def _write_register16(self, addr: int, value: int) -> None:
         # Write a 16-bit big endian value to the specified 8-bit register
         with self._device as device:
             # write LSB then MSB
@@ -378,7 +388,7 @@ class Sparkfun_QwiicTwist:
                 print("$%02X <= 0x%02X" % (addr, value & 0xFF))
                 print("$%02X <= 0x%02X" % (addr, (value >> 8) &0xFF))
 
-    def _write_register24(self, addr, value):
+    def _write_register24(self, addr: int, value: int) -> None:
         # Write a byte to the specified 8-bit register address
         with self._device as device:
             device.write(bytes([addr & 0xFF,
