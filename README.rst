@@ -6,7 +6,7 @@ Introduction
     :alt: Documentation Status
 
 .. image:: https://img.shields.io/discord/327254708534116352.svg
-    :target: https://discord.gg/nBQh6qu
+    :target: https://adafru.it/discord
     :alt: Discord
 
 .. image:: https://travis-ci.org/fourstix/Sparkfun_CircuitPython_QwiicTwist.svg?branch=master
@@ -88,7 +88,7 @@ Installing from PyPI
 
 .. code-block:: shell
 
-    pip3 install sparkfun-circuitpython-qwiictwist
+    pip install git+https://github.com/FAR-Lab/Sparkfun_CircuitPython_QwiicTwist.git
 
 To install system-wide (this may be required in some cases):
 
