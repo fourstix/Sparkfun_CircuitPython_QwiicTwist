@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Copyright (c) 2019-2021 Gaston Williams
+#
+# SPDX-License-Identifier: MIT
+
 #  This is example is for the SparkFun Qwiic Single Twist.
 #  SparkFun sells these at its website: www.sparkfun.com
 #  Do you like this library? Help support SparkFun. Buy a board!
@@ -21,15 +25,13 @@
  turning the encoder. This is so the master is not overwhelmed with
   interrupts while the user is still turning the dial.
 """
-
-# from time import sleep
+import sys
 import board
 import digitalio
-import busio
 import sparkfun_qwiictwist
 
 # Create bus object using our board's I2C port
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = board.I2C()
 
 # Set up Interrupt pin on GPIO D6 with a pull-up resistor
 twist_interrupt_pin = digitalio.DigitalInOut(board.D6)
@@ -39,14 +41,14 @@ twist_interrupt_pin.pull = digitalio.Pull.UP
 # Create twist object
 twist = sparkfun_qwiictwist.Sparkfun_QwiicTwist(i2c)
 
-print('Qwicc Twist Example 8 Interrupts')
+print("Qwicc Twist Example 8 Interrupts")
 
 # Check if connected
 if twist.connected:
-    print('Twist connected.')
+    print("Twist connected.")
 else:
-    print('Twist does not appear to be connected. Please check wiring.')
-    exit()
+    print("Twist does not appear to be connected. Please check wiring.")
+    sys.exit()
 
 # Optional: You can modify the time between when the user has stopped turning
 # and when interrupt is raised
@@ -54,19 +56,19 @@ else:
 # Set twist timeout to 500ms before interrupt assertion
 # twist.int_timeout = 500
 
-print('Type Ctrl-C to exit program.')
+print("Type Ctrl-C to exit program.")
 
 try:
     while True:
         # When the interrupt goes low
         if not twist_interrupt_pin.value:
-            print('Interrupt:')
+            print("Interrupt:")
             if twist.moved:
-                print('Count: ' + str(twist.count))
+                print("Count: " + str(twist.count))
             if twist.pressed:
-                print('Pressed!')
+                print("Pressed!")
             if twist.clicked:
-                print('Clicked!')
+                print("Clicked!")
             twist.clear_interrupts()
 
 except KeyboardInterrupt:

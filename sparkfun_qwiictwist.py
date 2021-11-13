@@ -1,4 +1,3 @@
-# SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
 # SPDX-FileCopyrightText: Copyright (c) 2019-2021 Gaston Williams
 #
 # SPDX-License-Identifier: MIT
@@ -68,9 +67,9 @@ except ImportError:
     pass
 
 # public constants
-QWIIC_TWIST_ADDR = const(0x3F) # default I2C Address
-QWIIC_TWIST_ADDR_ALT = const(0x3E) # secondary I2C Address
-QWIIC_TWIST_ID = const(0x5c) # value returned by id register
+QWIIC_TWIST_ADDR = const(0x3F)  # default I2C Address
+QWIIC_TWIST_ADDR_ALT = const(0x3E)  # secondary I2C Address
+QWIIC_TWIST_ID = const(0x5C)  # value returned by id register
 
 # private constants
 
@@ -83,18 +82,18 @@ _ENCODER_INT_ENABLE = const(0)
 
 # register constants
 _TWIST_ID = const(0x00)
-_TWIST_STATUS = const(0x01) # 2 - button clicked, 1 - button pressed, 0 - encoder moved
+_TWIST_STATUS = const(0x01)  # 2 - button clicked, 1 - button pressed, 0 - encoder moved
 _TWIST_VERSION = const(0x02)
-_TWIST_ENABLE_INTS = const(0x04) # 1 - button interrupt, 0 - encoder interrupt
+_TWIST_ENABLE_INTS = const(0x04)  # 1 - button interrupt, 0 - encoder interrupt
 _TWIST_COUNT = const(0x05)
 _TWIST_DIFFERENCE = const(0x07)
-_TWIST_LAST_ENCODER_EVENT = const(0x09) # Millis since last movement of knob
-_TWIST_LAST_BUTTON_EVENT = const(0x0B) # Millis since last press/release
+_TWIST_LAST_ENCODER_EVENT = const(0x09)  # Millis since last movement of knob
+_TWIST_LAST_BUTTON_EVENT = const(0x0B)  # Millis since last press/release
 _TWIST_RED = const(0x0D)
 _TWIST_GREEN = const(0x0E)
 _TWIST_BLUE = const(0x0F)
-_TWIST_CONNECT_RED = (0x10) # Amount to change red LED for each encoder tick
-_TWIST_CONNECT_GREEN = (0x12)
+_TWIST_CONNECT_RED = 0x10  # Amount to change red LED for each encoder tick
+_TWIST_CONNECT_GREEN = 0x12
 _TWIST_CONNECT_BLUE = const(0x14)
 _TWIST_TURN_INT_TIMEOUT = const(0x16)
 _TWIST_CHANGE_ADDRESS = const(0x18)
@@ -104,28 +103,24 @@ def _signed_int16(value: int) -> int:
     # convert a 16-bit value into a signed integer
     result = value
 
-    if result & (1<<15):
-        result -= 1<<16
+    if result & (1 << 15):
+        result -= 1 << 16
 
     return result
+
 
 # class
 class Sparkfun_QwiicTwist:
     """CircuitPython class for the Sparkfun QwiicTwist RGB Rotary Encoder"""
 
-    def __init__(
-        self,
-        i2c: I2C,
-        address: int = QWIIC_TWIST_ADDR,
-        debug: bool = False
-    ):
+    def __init__(self, i2c: I2C, address: int = QWIIC_TWIST_ADDR, debug: bool = False):
         """Initialize Qwiic Twist for i2c communication."""
         self._device = I2CDevice(i2c, address)
-        #save handle to i2c bus in case address is changed
+        # save handle to i2c bus in case address is changed
         self._i2c = i2c
         self._debug = debug
 
-# public properites (read-only)
+    # public properites (read-only)
 
     @property
     def connected(self) -> bool:
@@ -142,18 +137,17 @@ class Sparkfun_QwiicTwist:
         major = value & 0xFF
         minor = (value >> 8) & 0xFF
 
-        return 'v' + str(major) + '.' + str(minor)
+        return "v" + str(major) + "." + str(minor)
 
     @property
     def moved(self) -> bool:
         """Return true if the knob has been twisted."""
         status = self._read_register8(_TWIST_STATUS)
 
-        moved = status & (1<<_ENCODER_MOVED_BIT)
+        moved = status & (1 << _ENCODER_MOVED_BIT)
 
         # We've read this status bit, now clear it
-        self._write_register8(_TWIST_STATUS,
-                              status & ~(1<<_ENCODER_MOVED_BIT))
+        self._write_register8(_TWIST_STATUS, status & ~(1 << _ENCODER_MOVED_BIT))
 
         return bool(moved)
 
@@ -162,11 +156,10 @@ class Sparkfun_QwiicTwist:
         """"Return true if button is currently pressed."""
         status = self._read_register8(_TWIST_STATUS)
 
-        pressed = status & (1<<_BUTTON_PRESSED_BIT)
+        pressed = status & (1 << _BUTTON_PRESSED_BIT)
 
         # We've read this status bit, now clear it
-        self._write_register8(_TWIST_STATUS,
-                              status & ~(1<<_BUTTON_PRESSED_BIT))
+        self._write_register8(_TWIST_STATUS, status & ~(1 << _BUTTON_PRESSED_BIT))
 
         return bool(pressed)
 
@@ -175,11 +168,10 @@ class Sparkfun_QwiicTwist:
         """Return true if a click event has occurred. Event flag is then reset."""
         status = self._read_register8(_TWIST_STATUS)
 
-        clicked = status & (1<<_BUTTON_CLICKED_BIT)
+        clicked = status & (1 << _BUTTON_CLICKED_BIT)
 
         # We've read this status bit, now clear it
-        self._write_register8(_TWIST_STATUS,
-                              status & ~(1<<_BUTTON_CLICKED_BIT))
+        self._write_register8(_TWIST_STATUS, status & ~(1 << _BUTTON_CLICKED_BIT))
 
         return bool(clicked)
 
@@ -222,15 +214,13 @@ class Sparkfun_QwiicTwist:
 
         return elapsed_time
 
-
-# public properties (read-write)
+    # public properties (read-write)
 
     @property
     def count(self) -> int:
         """Returns the number of indents since the user turned the knob."""
         value = self._read_register16(_TWIST_COUNT)
         return _signed_int16(value)
-
 
     @count.setter
     def count(self, value: int):
@@ -281,13 +271,13 @@ class Sparkfun_QwiicTwist:
     @property
     def green_connection(self) -> int:
         """Get the value of the green LED connection."""
-        return self._read_register16(_TWIST_CONNECT_GREEN)
+        value = self._read_register16(_TWIST_CONNECT_GREEN)
+        return _signed_int16(value)
 
     @green_connection.setter
     def green_connection(self, value: int):
         """Set the value of the green LED connection"""
-        value = self._write_register16(_TWIST_CONNECT_GREEN, value)
-        return _signed_int16(value)
+        self._write_register16(_TWIST_CONNECT_GREEN, value)
 
     @property
     def blue_connection(self) -> int:
@@ -304,7 +294,8 @@ class Sparkfun_QwiicTwist:
     def int_timeout(self) -> int:
         """Get number of milliseconds that elapse between
         the end of the knob turning and interrupt firing."""
-        return self._read_register16(_TWIST_TURN_INT_TIMEOUT)
+        value = self._read_register16(_TWIST_TURN_INT_TIMEOUT)
+        return _signed_int16(value)
 
     @int_timeout.setter
     def int_timeout(self, value: int):
@@ -312,7 +303,7 @@ class Sparkfun_QwiicTwist:
         the end of knob turning and interrupt firing."""
         self._write_register16(_TWIST_TURN_INT_TIMEOUT, value)
 
-# public methods
+    # public methods
 
     def clear_interrupts(self) -> None:
         """Clears the moved, clicked, and pressed bits"""
@@ -320,10 +311,10 @@ class Sparkfun_QwiicTwist:
 
     def set_color(self, red_value: int, green_value: int, blue_value: int) -> None:
         """Set the rgb color of the encoder LEDs"""
-        self._write_register24(_TWIST_RED,
-                               (red_value & 0xFF) << 16 |
-                               (green_value & 0xFF) << 8 |
-                               blue_value & 0xFF)
+        self._write_register24(
+            _TWIST_RED,
+            (red_value & 0xFF) << 16 | (green_value & 0xFF) << 8 | blue_value & 0xFF,
+        )
 
     def connect_color(self, red_value: int, green_value: int, blue_value: int) -> None:
         """Connect all the rgb color for the encoder LEDs"""
@@ -334,29 +325,29 @@ class Sparkfun_QwiicTwist:
     def change_address(self, new_address: int) -> bool:
         """Change the i2c address of Twist Rotary Encoder snd return True if successful."""
         # check range of new address
-        if (new_address < 8 or new_address > 119):
-            print('ERROR: Address outside 8-119 range')
+        if new_address < 8 or new_address > 119:
+            print("ERROR: Address outside 8-119 range")
             return False
         # write new address
         self._write_register8(_TWIST_CHANGE_ADDRESS, new_address)
 
-	    # wait a second for qwiic twist to settle after change
+        # wait a second for qwiic twist to settle after change
         sleep(1)
 
         # try to re-create new i2c device at new address
         try:
             self._device = I2CDevice(self._i2c, new_address)
         except ValueError as err:
-            print('Address Change Failure')
+            print("Address Change Failure")
             print(err)
             return False
 
-        #if we made it here, everything went fine
+        # if we made it here, everything went fine
         return True
 
-# No i2c begin function is needed since I2Cdevice class takes care of that
+    # No i2c begin function is needed since I2Cdevice class takes care of that
 
-# private methods
+    # private methods
 
     def _read_register8(self, addr: int) -> int:
         # Read and return a byte from the specified 8-bit register address.
@@ -387,21 +378,25 @@ class Sparkfun_QwiicTwist:
         # Write a 16-bit big endian value to the specified 8-bit register
         with self._device as device:
             # write LSB then MSB
-            device.write(bytes([addr & 0xFF,
-                                value & 0xFF,
-                                (value >> 8) & 0xFF]))
+            device.write(bytes([addr & 0xFF, value & 0xFF, (value >> 8) & 0xFF]))
             if self._debug:
                 print("$%02X <= 0x%02X" % (addr, value & 0xFF))
-                print("$%02X <= 0x%02X" % (addr, (value >> 8) &0xFF))
+                print("$%02X <= 0x%02X" % (addr, (value >> 8) & 0xFF))
 
     def _write_register24(self, addr: int, value: int) -> None:
         # Write a byte to the specified 8-bit register address
         with self._device as device:
-            device.write(bytes([addr & 0xFF,
-                                (value >> 16) & 0xFF,
-                                (value >> 8) & 0xFF,
-                                value & 0xFF]))
+            device.write(
+                bytes(
+                    [
+                        addr & 0xFF,
+                        (value >> 16) & 0xFF,
+                        (value >> 8) & 0xFF,
+                        value & 0xFF,
+                    ]
+                )
+            )
             if self._debug:
-                print("$%02X <= 0x%02X" % (addr, (value >> 16) &0xFF))
-                print("$%02X <= 0x%02X" % (addr, (value >> 8) &0xFF))
+                print("$%02X <= 0x%02X" % (addr, (value >> 16) & 0xFF))
+                print("$%02X <= 0x%02X" % (addr, (value >> 8) & 0xFF))
                 print("$%02X <= 0x%02X" % (addr, value & 0xFF))

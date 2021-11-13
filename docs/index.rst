@@ -23,7 +23,7 @@ Table of Contents
 .. toctree::
     :caption: Tutorials
 
-    Sparkfun Qwiic Single Twist Hookup Guide <https://learn.sparkfun.com/tutorials/qwiic-twist-hookup-guide> 
+    Sparkfun Qwiic Single Twist Hookup Guide <https://learn.sparkfun.com/tutorials/qwiic-twist-hookup-guide>
 
 .. toctree::
     :caption: Related Products

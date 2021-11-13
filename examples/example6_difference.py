@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Copyright (c) 2019-2021 Gaston Williams
+#
+# SPDX-License-Identifier: MIT
+
 #  This is example is for the SparkFun Qwiic Single Twist.
 #  SparkFun sells these at its website: www.sparkfun.com
 #  Do you like this library? Help support SparkFun. Buy a board!
@@ -20,33 +24,32 @@
  not need to know an absolute value like 417, but instead that
  the user has  moved the encoder 4 ticks since the last reading.
 """
-
+import sys
 from time import sleep
 import board
-import busio
 import sparkfun_qwiictwist
 
 # Create bus object using our board's I2C port
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = board.I2C()
 
 # Create twist object
 twist = sparkfun_qwiictwist.Sparkfun_QwiicTwist(i2c)
 
-print('Qwicc Twist Example 6 Difference')
+print("Qwicc Twist Example 6 Difference")
 
 # Check if connected
 if twist.connected:
-    print('Twist connected.')
+    print("Twist connected.")
 else:
-    print('Twist does not appear to be connected. Please check wiring.')
-    exit()
+    print("Twist does not appear to be connected. Please check wiring.")
+    sys.exit()
 
-print('Type Ctrl-C to exit program.')
+print("Type Ctrl-C to exit program.")
 
 try:
     while True:
-        print('Count: ' + str(twist.count))
-        print('Difference: ' + str(twist.difference))
+        print("Count: " + str(twist.count))
+        print("Difference: " + str(twist.difference))
         sleep(0.250)
 
 except KeyboardInterrupt:
