@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Copyright (c) 2019-2021 Gaston Williams
+#
+# SPDX-License-Identifier: MIT
+
 #  This is example is for the SparkFun Qwiic Single Twist.
 #  SparkFun sells these at its website: www.sparkfun.com
 #  Do you like this library? Help support SparkFun. Buy a board!
@@ -15,34 +19,33 @@
  control the Qwiic Twist RGB Rotrary Encoder over I2C and print
  the number of steps the encoder has been twisted.
 """
-
+import sys
 from time import sleep
 import board
-import busio
 import sparkfun_qwiictwist
 
 # Create bus object using our board's I2C port
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = board.I2C()
 
 # Create twist object
 twist = sparkfun_qwiictwist.Sparkfun_QwiicTwist(i2c)
 
-print('Qwicc Twist Example 1 Basic Readings')
+print("Qwicc Twist Example 1 Basic Readings")
 
 # Check if connected
 if twist.connected:
-    print('Twist connected.')
+    print("Twist connected.")
 else:
-    print('Twist does not appear to be connected. Please check wiring.')
-    exit()
+    print("Twist does not appear to be connected. Please check wiring.")
+    sys.exit()
 
-print('Type Ctrl-C to exit program.')
+print("Type Ctrl-C to exit program.")
 
 try:
     while True:
-        print('Count: ' + str(twist.count))
+        print("Count: " + str(twist.count))
         if twist.pressed:
-            print('Pressed!')
+            print("Pressed!")
         sleep(0.5)
 
 except KeyboardInterrupt:

@@ -28,7 +28,7 @@ CircuitPython library for Sparkfun Qwiic Twist RGB Rotary Encoder.  This library
     :alt: SparkFun Qwiic Twist RGB Rotary Encorder (DEV-15083)
 
 `SparkFun Qwiic Twist RGB Rotary Encoder (DEV-15083) <https://www.sparkfun.com/products/15083>`_
-  
+
 Dependencies
 =============
 This driver depends on:
@@ -47,7 +47,7 @@ Raspberry Pi Setup
 ------------------
    Adafruit has an excellent tutorial on `Installing CircuitPython Libraries on Raspberry Pi
    <https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi/>`_.
- 
+
 Quick Start Summary:
 
 * Start with the latest version of Raspbian with Wifi configured.
@@ -197,15 +197,12 @@ Then run the build:
 
 License Information
 -----------------------
-This product is **open source**! 
+This product is **open source**!
 
-Please review the LICENSE.md file for license information. 
+Please review the LICENSE.md file for license information.
 
-Please use, reuse, and modify these files as you see fit. 
+Please use, reuse, and modify these files as you see fit.
 
 Please maintain the attributions to SparkFun Electronics and Adafruit and release any derivative under the same license.
 
 Distributed as-is; no warranty is given.
-
-
-

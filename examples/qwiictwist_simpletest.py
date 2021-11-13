@@ -16,36 +16,35 @@
  This program uses the Qwiic Twist CircuitPython Library to change
  that status of the Qwiic Twist Rotary Encoder.
 """
-
+import sys
 from time import sleep
 import board
-import busio
 import sparkfun_qwiictwist
 
 # Create bus object using our board's I2C port
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = board.I2C()
 
 # Create joystick object
 twist = sparkfun_qwiictwist.Sparkfun_QwiicTwist(i2c)
 
 # Check if connected
 if twist.connected:
-    print('Twist connected.')
+    print("Twist connected.")
 else:
-    print('Twist does not appear to be connected. Please check wiring.')
-    exit()
+    print("Twist does not appear to be connected. Please check wiring.")
+    sys.exit()
 
 # Print firmware version and current status
-print('Firmware version ' + twist.version)
+print("Firmware version " + twist.version)
 
 # Turn the relay on and off
-print('Press Ctrl-C to exit program')
+print("Press Ctrl-C to exit program")
 
 try:
     while True:
-        print('Count: ' + str(twist.count))
+        print("Count: " + str(twist.count))
         if twist.pressed:
-            print('Pressed!')
+            print("Pressed!")
         sleep(0.5)
 
 except KeyboardInterrupt:

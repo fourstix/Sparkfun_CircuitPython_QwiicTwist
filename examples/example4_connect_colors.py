@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Copyright (c) 2019-2021 Gaston Williams
+#
+# SPDX-License-Identifier: MIT
+
 #  This is example is for the SparkFun Qwiic Single Twist.
 #  SparkFun sells these at its website: www.sparkfun.com
 #  Do you like this library? Help support SparkFun. Buy a board!
@@ -21,33 +25,32 @@
  increase the blue value with each tick.  These values are stored
  in the Qwiic Twist and will be loaded after each power-on.
 """
-
+import sys
 from time import sleep
 import board
-import busio
 import sparkfun_qwiictwist
 
 # Create bus object using our board's I2C port
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = board.I2C()
 
 # Create twist object
 twist = sparkfun_qwiictwist.Sparkfun_QwiicTwist(i2c)
 
-print('Qwicc Twist Example 4 Connect Colors')
+print("Qwicc Twist Example 4 Connect Colors")
 
 # Check if connected
 if twist.connected:
-    print('Twist connected.')
+    print("Twist connected.")
 else:
-    print('Twist does not appear to be connected. Please check wiring.')
-    exit()
+    print("Twist does not appear to be connected. Please check wiring.")
+    sys.exit()
 
-print('Type Ctrl-C to exit program.')
+print("Type Ctrl-C to exit program.")
 
 # Set Red and Blue LED brightnesses to half of max.
 twist.set_color(128, 0, 128)
 
-#Set the individual color connections
+# Set the individual color connections
 
 # Red LED will go down 10 in brightness with each encoder tick
 twist.red_connection = -10
@@ -59,9 +62,9 @@ twist.blue_connection = 10
 
 try:
     while True:
-        print('Count: ' + str(twist.count))
+        print("Count: " + str(twist.count))
         if twist.pressed:
-            print('Pressed!')
+            print("Pressed!")
         sleep(0.5)
 
 except KeyboardInterrupt:

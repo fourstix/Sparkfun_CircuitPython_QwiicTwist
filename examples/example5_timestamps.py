@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Copyright (c) 2019-2021 Gaston Williams
+#
+# SPDX-License-Identifier: MIT
+
 #  This is example is for the SparkFun Qwiic Single Twist.
 #  SparkFun sells these at its website: www.sparkfun.com
 #  Do you like this library? Help support SparkFun. Buy a board!
@@ -20,38 +24,37 @@
  often and when the isMoved or isClick goes true, then read the
  timestamp and you'll know when the user did their thing.
 """
-
+import sys
 from time import sleep
 import board
-import busio
 import sparkfun_qwiictwist
 
 # Create bus object using our board's I2C port
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = board.I2C()
 
 # Create twist object
 twist = sparkfun_qwiictwist.Sparkfun_QwiicTwist(i2c)
 
-print('Qwicc Twist Example 5 Timestamps')
+print("Qwicc Twist Example 5 Timestamps")
 
 # Check if connected
 if twist.connected:
-    print('Twist connected.')
+    print("Twist connected.")
 else:
-    print('Twist does not appear to be connected. Please check wiring.')
-    exit()
+    print("Twist does not appear to be connected. Please check wiring.")
+    sys.exit()
 
-print('Type Ctrl-C to exit program.')
+print("Type Ctrl-C to exit program.")
 
 try:
     while True:
-        print('Count: ' + str(twist.count))
+        print("Count: " + str(twist.count))
         if twist.moved:
-            print('Last Twist time: ' + str(twist.time_since_last_movement))
+            print("Last Twist time: " + str(twist.time_since_last_movement))
         if twist.clicked:
-            print('Last Button time: ' + str(twist.time_since_last_press))
+            print("Last Button time: " + str(twist.time_since_last_press))
         if twist.pressed:
-            print('Pressed!')
+            print("Pressed!")
         sleep(1)
 
 except KeyboardInterrupt:
