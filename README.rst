@@ -143,7 +143,7 @@ Usage Example
 
 .. code-block:: shell
 
-    # import the CircuitPython board and busio libraries
+    # import the CircuitPython board library
     import board
 
     # Create bus object using the board's I2C port
