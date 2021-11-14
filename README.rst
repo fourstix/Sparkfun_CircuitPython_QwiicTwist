@@ -93,13 +93,13 @@ To install for current user:
 
 .. code-block:: shell
 
-    pip3 install Sparkfun-circuitpython-qwiictwist
+    pip3 install sparkfun-circuitpython-qwiictwist
 
 To install system-wide (this may be required in some cases):
 
 .. code-block:: shell
 
-    sudo pip3 install Sparkfun-circuitpython-qwiictwist
+    sudo pip3 install sparkfun-circuitpython-qwiictwist
 
 To install in a virtual environment in your current project:
 
@@ -108,7 +108,7 @@ To install in a virtual environment in your current project:
     mkdir project-name && cd project-name
     python3 -m venv .env
     source .env/bin/activate
-    pip3 install Sparkfun-circuitpython-qwiictwist
+    pip3 install sparkfun-circuitpython-qwiictwist
 
 
 
@@ -141,19 +141,18 @@ Usage Example
 * `CircuitPython on a Raspberry Pi <https://learn.adafruit.com/circuitpython-on-raspberrypi-linux>`_ - Basic information on how to install CircuitPython on a Raspberry Pi.
 * Code Example:
 
- .. code-block:: shell
+.. code-block:: shell
 
-     # import the CircuitPython board and busio libraries
-     import board
-     import busio
+    # import the CircuitPython board library
+    import board
 
-     # Create bus object using the board's I2C port
-     i2c = busio.I2C(board.SCL, board.SDA)
+    # Create bus object using the board's I2C port
+    i2c = board.I2C()
 
-     twist = QwiicTwist(i2c)  # default address is 0x3F
+    twist = QwiicTwist(i2c)  # default address is 0x3F
 
-     # For a different address use QwiicTwist(i2c, address)
-     # twist = QwiicTwist(i2c, 0x3E)
+    # For a different address use QwiicTwist(i2c, address)
+    # twist = QwiicTwist(i2c, 0x3E)
 
 Contributing
 ============
