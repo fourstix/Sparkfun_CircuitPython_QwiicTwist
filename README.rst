@@ -154,6 +154,23 @@ Usage Example
     # For a different address use QwiicTwist(i2c, address)
     # twist = QwiicTwist(i2c, 0x3E)
 
+Upgrading
+=========
+On supported GNU/Linux systems like the Raspberry Pi, you can upgrade the driver
+to the latest published version.
+
+To upgrade for current user:
+
+.. code-block:: shell
+
+    pip3 install --upgrade sparkfun-circuitpython-qwiicjoystick
+
+To upgrade system-wide (this may be required in some cases):
+
+.. code-block:: shell
+
+    sudo pip3 install --upgrade sparkfun-circuitpython-qwiicjoystick
+
 Contributing
 ============
 
